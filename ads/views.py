@@ -21,6 +21,7 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from ads.forms import CreateForm, CommentForm
 from django.http import HttpResponse
+from django.views.generic import TemplateView
 
 # class AdListView(OwnerListView):
 #     model = Ad
@@ -57,6 +58,12 @@ class AdDetailView(OwnerDetailView):
         comment_form = CommentForm()
         context = { 'ad' : x, 'comments': comments, 'comment_form': comment_form }
         return render(request, self.template_name, context)
+
+def generic(request):
+    HttpResponse(request, "ads/generic.html")
+
+
+
 
 # class AdCreateView(OwnerCreateView):
 #     model = Ad

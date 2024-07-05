@@ -1,34 +1,6 @@
 {% extends 'base_bootstrap.html' %}
 {% load app_tags %} <!-- see home/templatetags/app_tags.py and dj4e-samples/settings.py -->
-{% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-radius:10px !important">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'ads:all' %}">{{ settings.APP_NAME }}</a>
-    <ul class="navbar-nav">
-      {% url 'ads:all' as x %}
-      <li {% if request.get_full_path == x %}class="active"{% endif %}>
-          <a class="nav-link" href="{% url 'ads:all' %}" role="button">Ads</a></li>
-    </ul>
-    <ul class="navbar-nav">
-      {% if user.is_authenticated %}
-      <li>
-         <a class="nav-link" href="{% url 'ads:ad_create' %}">Create Ad</a>
-      </li>
-      <li class="nav-item dropdown">
-         <a class="nav-link dropdown-toggle" href="#" id="rightnavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img style="width: 25px;" src="{{ user|gravatar:60 }}"/><b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="rightnavDropdown">
-            <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'ads:all' %}">Logout</a></li>
-        </ul>
-       </li>
-       {% else %}
-       <li class="nav-item"><a class="nav-link" href="{% url 'login' %}?next={% url 'ads:all' %}">Login</a></li>
-       {% endif %}
-    </ul>
-  </div>
-</nav>
-{% endblock %}
+
 {% load static %}
 {% block head %}
 
@@ -37,6 +9,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="{% static 'css/main.css' %}" />
   <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css' %}" />
+
+<style>
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: none;
+  background-color: rgba(0,0,0,0.5); /*dim the background*/
+}
+
+</style>
 
 {% endblock %}
 
@@ -52,6 +38,7 @@
 
 
 {% endblock %}
+
 
 {% block sidebar %}
 
@@ -72,57 +59,49 @@
           <h2>Menu</h2>
         </header>
         <ul>
-          <li><a href="index.html">Homepage</a></li>
-          <li><a href="generic.html">Generic</a></li>
-          <li><a href="elements.html">Elements</a></li>
+          <li><a href="{% url 'home:home' %}">Homepage</a></li>
+          <li><a class="navbar-brand" href="{% url 'ads:all' %}">Ads</a></li>
+          <li><a class="nav-link" href="{% url 'ads:ad_create' %}">Create Ad</a></li>
           <li>
-            <span class="opener">Submenu</span>
+          {% if user.is_authenticated %}
+            <span class="opener">Logged</span>
             <ul>
-              <li><a href="#">Lorem Dolor</a></li>
-              <li><a href="#">Ipsum Adipiscing</a></li>
-              <li><a href="#">Tempus Magna</a></li>
-              <li><a href="#">Feugiat Veroeros</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'ads:all' %}">Logout</a></li>
+              <li><a class="nav-link" href="{% url 'ads:ad_create' %}">Create Ad</a></li>
             </ul>
-          </li>
-          <li><a href="#">Etiam Dolore</a></li>
-          <li><a href="#">Adipiscing</a></li>
-          <li>
-            <span class="opener">Another Submenu</span>
-            <ul>
-              <li><a href="#">Lorem Dolor</a></li>
-              <li><a href="#">Ipsum Adipiscing</a></li>
-              <li><a href="#">Tempus Magna</a></li>
-              <li><a href="#">Feugiat Veroeros</a></li>
-            </ul>
-          </li>
-          <li><a href="#">Maximus Erat</a></li>
-          <li><a href="#">Sapien Mauris</a></li>
-          <li><a href="#">Amet Lacinia</a></li>
+          {% else %}
+            <span class="opener">Unlogged</span>
+              <ul>
+                <li><a class="nav-link" href="{% url 'login' %}?next={% url 'ads:all' %}">Login</a></li>
+              </ul>
+            </li>
+          {% endif %}
         </ul>
       </nav>
 
     <!-- Section -->
       <section>
         <header class="major">
-          <h2>Ante interdum</h2>
+          <h2>Enlaces útiles</h2>
         </header>
         <div class="mini-posts">
           <article>
-            <a href="#" class="image"><img src="images/pic07.jpg" alt="" /></a>
-            <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+            <a href="https://github.com/marcosBlasco/adsPage" class="image"><img src="{% static '/home/images/github-logo.png'%}" alt="" /></a>
+            <p>Link to the complete project, versioned on GitHub</p>
           </article>
           <article>
-            <a href="#" class="image"><img src="images/pic08.jpg" alt="" /></a>
-            <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+            <h2 class="logo" style="text-align: center">
+              <a href="https://html5up.net/editorial" class="image"><img src="{% static '/home/images/HTML5UP.png'%}" alt="" /></a>
+            </h2>
+            <p>Link to the base template for the frontend. <br/>
+              A repository of impresive and responsive frontend templates
+            </p>
           </article>
           <article>
-            <a href="#" class="image"><img src="images/pic09.jpg" alt="" /></a>
-            <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+            <a href="https://www.linkedin.com/in/marcos-javier-blasco-167599177/" class="image"><img src="{% static '/home/images/linkedin.webp'%}" alt="" /></a>
+            <p>Find me through my LinkedIn profile</p>
           </article>
         </div>
-        <ul class="actions">
-          <li><a href="#" class="button">More</a></li>
-        </ul>
       </section>
 
     <!-- Section -->
@@ -132,7 +111,7 @@
         </header>
         <p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
         <ul class="contact">
-          <li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+          <li class="icon solid fa-envelope"><a href="#">marcos.ielect@gmail.com</a></li>
           <li class="icon solid fa-phone">(000) 000-0000</li>
           <li class="icon solid fa-home">1234 Somewhere Road #8254<br />
           Nashville, TN 00000-0000</li>
@@ -147,4 +126,24 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block header %}
+<!-- Header -->
+<header id="header">
+  <a href="https://html5up.net/editorial" class="logo"><strong> {{ settings.APP_NAME }} made with Editorial template</strong> by HTML5 UP</a>
+  <ul class="icons">
+    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+    <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+    <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+    <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+    {% if user.is_authenticated %}
+    <li><img style="width: 25px;" src="{{ user|gravatar:60 }}"/></li>
+    <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'ads:all' %}">Logout</a></li>
+    {% else %}
+    <li><a class="nav-link" href="{% url 'login' %}?next={% url 'ads:all' %}">Login</a></li>
+    {% endif %}
+  </ul>
+</header>
 {% endblock %}
